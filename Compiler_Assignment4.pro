@@ -3,8 +3,8 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-SOURCES += \
-    nfa.c \
-    fsm.c \
-    dfa.c
+SOURCES += fsm.c
+
+HEADERS += \
+    def.h
 
