@@ -19,19 +19,108 @@ FILE *file;
 //    fprintf(file,"%s %d\n",string,n);
 //}
 
+int checkAoperator(char **lexeme_Begin)
+{
+    char *lexeme_forward;
+    lexeme_forward=*lexeme_Begin;
+    if(*lexeme_forward==43){
+        lexeme_forward++;
+        if(*lexeme_forward==43){
+            lexeme_forward++;
+            *lexeme_Begin=lexeme_forward;
+            return PLUS_PLUS;
+        }
+        *lexeme_Begin=lexeme_forward;
+        return PLUS;
+    }
+    else if(*lexeme_forward==45){
+        lexeme_forward++;
+        if(*lexeme_forward==45){
+            lexeme_forward++;
+            *lexeme_Begin=lexeme_forward;
+            return MINUS_MINUS;
+        }
+        *lexeme_Begin=lexeme_forward;
+        return MINUS;
+    }
+    else if(*lexeme_forward==42){
+        lexeme_forward++;
+        *lexeme_Begin=lexeme_forward;
+        return MULT;
+    }
+    else if(*lexeme_forward==47){
+        lexeme_forward++;
+        *lexeme_Begin=lexeme_forward;
+        return DIV;
+    }
+    return 0;
+}
+
+int checkRoperator(char **lexeme_Begin)
+{
+    char *lexeme_forward;
+    lexeme_forward=*lexeme_Begin;
+    if(*lexeme_forward==60){
+        lexeme_forward++;
+        if(*lexeme_forward==61){
+            lexeme_forward++;
+            *lexeme_Begin=lexeme_forward;
+            return LESS_EQ;
+        }
+        *lexeme_Begin=lexeme_forward;
+        return GREATER;
+    }
+    else if(*lexeme_forward==61){
+        lexeme_forward++;
+        if(*lexeme_forward==61){
+            lexeme_forward++;
+            *lexeme_Begin=lexeme_forward;
+            return EQ_EQ;
+        }
+        lexeme_forward++;
+        return EQ;
+    }
+    else if(*lexeme_forward==62){
+        lexeme_forward++;
+    }
+
+}
+
+int checkinteger(char **lexeme_begin,attrType *token)
+{
+    int i=0;
+    char *lexeme_forward;
+    lexeme_forward=*lexeme_begin;
+    token->string=(char*)malloc(strlen(*lexeme_begin)*sizeof(char));
+    if(*lexeme_forward==45||*lexeme_forward==43||(*lexeme_forward>=48&&*lexeme_forward<=57)){
+        *(token->string+i)=*lexeme_forward;
+        lexeme_forward++;
+        i++;
+    }
+    while(*lexeme_forward!='0')
+    {
+        if(*lexeme_forward>=48&&*lexeme_forward<=57){
+            *(token->string+i)=*lexeme_forward;
+            lexeme_forward++;
+            i++;
+        }
+        else if(*lexeme_forward==45||*lexeme_forward==43){
+            return -1;
+        }
+    }
+}
 
 int checkkeyword(char *string)
 {
     int i;
-    char keyword[25][10]={"short","sizeof","int","float","double","bool","char","signed","unsigned","for","while","do","return","struct","const", "void", "switch","break", "case", "continue","goto","long","static","union","default"};
-    for(i=0;i<25;i++){
+    char keyword[24][10]={"short","int","float","double","bool","char","signed","unsigned","for","while","do","return","struct","const", "void", "switch","break", "case", "continue","goto","long","static","union","default"};
+    int id[24]={SHORT,INT,FLOAT,DOUBLE,BOOL,CHAR,SIGNED,UNSIGNED,FOR,WHILE,DO,RETURN,STRUCT,CONST,VOID,SWITCH,BREAK ,CASE ,CONTINUE,GOTO,LONG,STATIC,UNION, DEFAULT};
+    for(i=0;i<24;i++){
         if(!strcmp(keyword[i],string)){
-
-            return to(keyword[i]);
+            return id[i];
         }
     }
-    return IDNTIFIER;
-
+    return -1;
 }
 
 
